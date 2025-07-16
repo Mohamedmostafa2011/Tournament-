@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل البطولة</title>
+  <style>
+    body {
+      font-family: Arial;
+      direction: rtl;
+      text-align: right;
+      padding: 20px;
+    }
+    label, select, input {
+      display: block;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h2>تسجيل في البطولة</h2>
+  <form id="tournamentForm">
+    <label>الاسم:</label>
+    <input type="text" name="name" required>
+
+    <label>رقم التليفون:</label>
+    <input type="tel" name="phone" required>
+
+    <label>اختر نوع البطولة:</label>
+    <select name="type" id="type" required onchange="updateExtraField()">
+      <option value="">-- اختر --</option>
+      <option value="PUBG">PUBG</option>
+      <option value="FC Mobile">FC Mobile</option>
+      <option value="eFootball">eFootball</option>
+    </select>
+
+    <div id="extraField"></div>
+
+    <button type="submit">إرسال</button>
+  </form>
+
+  <script>
+    function updateExtraField() {
+      const type = document.getElementById("type").value;
+      const extraField = document.getElementById("extraField");
+      extraField.innerHTML = "";
+
+      if (type === "PUBG") {
+        extraField.innerHTML = `<label>ID اللعبة (PUBG):</label><input type="text" name="gameId" required>`;
+      } else if (type === "FC Mobile") {
+        extraField.innerHTML = `<label>UID (FC Mobile):</label><input type="text" name="gameId" required>`;
+      } else if (type === "eFootball") {
+        extraField.innerHTML = `<label>اسم المستخدم (eFootball):</label><input type="text" name="gameId" required>`;
+      }
+    }
+
+    document.getElementById("tournamentForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch("YOUR_GOOGLE_SCRIPT_URL", {
+        method: "POST",
+        body: formData
+      }).then(() => {
+        alert("تم إرسال البيانات بنجاح ✅");
+        this.reset();
+        document.getElementById("extraField").innerHTML = "";
+      }).catch(() => alert("حدث خطأ، حاول مرة أخرى"));
+    });
+  </script>
+</body>
+</html>
